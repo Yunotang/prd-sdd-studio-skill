@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# 虛擬環境
+.venv/
+venv/
+env/
+
+# 環境變數與憑證（嚴禁進版控）
+.env
+.env.*
+*.key
+*.pem
+*credentials*
+*secret*
+
+# 編輯器 / 作業系統
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
