@@ -1,0 +1,61 @@
+@startuml
+!theme plain
+title PRD/SDD Studio — 流程架構圖
+
+start
+:啟動 skill;
+
+partition "啟動偵測 (startup-scan)" {
+  :掃描當前目錄\nPRD.md / SDD.md / TASK.md / CHANGELOG.md + 原始碼;
+  if (專案現況?) then (有 TASK 未完成)
+    :讀 TASK + CHANGELOG 重建脈絡\n接力續開發 (不重來);
+  elseif (有 PRD/SDD 無 TASK) then (讀懂確認)
+    :摘要回報理解 → 使用者確認\n直接進開發 (不重生成);
+  elseif (只有零星程式碼) then (逆向/迭代)
+    :詢問逆向補 PRD/SDD 或直接改程式;
+  else (空 / 全新)
+    :顯示主選單 [1]~[5];
+  endif
+}
+
+partition "功能 1 & 2：PRD 諮詢 (Consultant)" {
+  :多輪對話釐清需求 (≥2 輪);
+  :平行生成 PRD.md + 概念架構圖;
+  :主動接力 → 詢問是否進 SDD;
+}
+
+partition "功能 3：SDD 架構師 (Architect)" {
+  :選模式\n完整 / 精簡 / 特定技術 / 互動式;
+  :生成 SDD.md + 技術架構圖\n(從 SDD 反推, 圖文一致);
+  :主動接力 → 詢問是否進開發;
+}
+
+partition "功能 4：依 SDD 實際開發" {
+  :讀 PRD + SDD §10 實作路徑;
+  :規劃 TASK.md (任務 ID = TASK-NNN);
+  repeat
+    :實作單一任務 → 依 SDD 驗證;
+    :TASK.md 該項標「完成」;
+  repeat while (還有未完成任務?) is (是) not (否)
+}
+
+stop
+
+note right
+  **橫切流程 (所有功能共用)**
+  ====
+  **出圖 (render_puml.py)**
+  PlantUML 原始碼 → .puml
+  → 呼叫腳本 → 輸出 PNG / SVG
+  ----
+  **本地工作流 (每次產出/修改後)**
+  1. 寫 CHANGELOG.md
+  2. 主動問 git → 本地 commit
+  3. commit 後問 PRD/SDD 文件同步
+  ----
+  **鐵則**：全程繁中、日期查真、
+  Git 安全 (不動 main / 不 --force)、
+  先偵測後問不重來
+end note
+
+@enduml
